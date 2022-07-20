@@ -436,8 +436,94 @@
 <p>本题时间限制为$500ms$，故暴力模拟不可取。</p>
 <p>本题有多种解法，包括但不限于分块、线段树，这里提供一种使用线段树的解法。区间修改，区间查询。</p>
 <p>线段树节点存储对应区间内的黑棋和白棋数，每次改变棋子的操作对应将区间内的黑白棋的数目对调。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> N 100010</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> ll;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">node</span> &#123;</span><br><span class="line">    <span class="type">int</span> l, r;</span><br><span class="line">    <span class="type">int</span> black, white, lz;</span><br><span class="line">&#125; tree[<span class="number">4</span> * N];  <span class="comment">//四倍空间以上</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 建树</span></span><br><span class="line"><span class="comment">// 一开始只有黑棋</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">build</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">    tree[i].l = l;</span><br><span class="line">    tree[i].r = r;</span><br><span class="line">    <span class="keyword">if</span> (l == r) &#123;</span><br><span class="line">        tree[i].black++;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> mid = (l + r) / <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">build</span>(i * <span class="number">2</span>, l, mid);</span><br><span class="line">    <span class="built_in">build</span>(i * <span class="number">2</span> + <span class="number">1</span>, mid + <span class="number">1</span>, r);</span><br><span class="line"></span><br><span class="line">    tree[i].black = tree[i * <span class="number">2</span>].black + tree[i * <span class="number">2</span> + <span class="number">1</span>].black;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//向下传递</span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">pushdown</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree[i].lz != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">swap</span>(tree[i * <span class="number">2</span>].black, tree[i * <span class="number">2</span>].white);</span><br><span class="line">        <span class="built_in">swap</span>(tree[i * <span class="number">2</span> + <span class="number">1</span>].black, tree[i * <span class="number">2</span> + <span class="number">1</span>].white);</span><br><span class="line"></span><br><span class="line">        tree[i * <span class="number">2</span>].lz ^= <span class="number">1</span>;</span><br><span class="line">        tree[i * <span class="number">2</span> + <span class="number">1</span>].lz ^= <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        tree[i].lz = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//改变</span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">change</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree[i].l &gt;= l &amp;&amp; tree[i].r &lt;= r) &#123;</span><br><span class="line">        tree[i].lz ^= <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">swap</span>(tree[i].black, tree[i].white);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">pushdown</span>(i);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (tree[i * <span class="number">2</span>].r &gt;= l)</span><br><span class="line">        <span class="built_in">change</span>(i * <span class="number">2</span>, l, r);</span><br><span class="line">    <span class="keyword">if</span> (tree[i * <span class="number">2</span> + <span class="number">1</span>].l &lt;= r)</span><br><span class="line">        <span class="built_in">change</span>(i * <span class="number">2</span> + <span class="number">1</span>, l, r);</span><br><span class="line"></span><br><span class="line">    tree[i].black = tree[i * <span class="number">2</span>].black + tree[i * <span class="number">2</span> + <span class="number">1</span>].black;</span><br><span class="line">    tree[i].white = tree[i * <span class="number">2</span>].white + tree[i * <span class="number">2</span> + <span class="number">1</span>].white;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//询问</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">search</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree[i].l &gt;= l &amp;&amp; tree[i].r &lt;= r)</span><br><span class="line">        <span class="keyword">return</span> tree[i].white;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">pushdown</span>(i);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (tree[i * <span class="number">2</span>].r &gt;= l)</span><br><span class="line">        sum += <span class="built_in">search</span>(i * <span class="number">2</span>, l, r);</span><br><span class="line">    <span class="keyword">if</span> (tree[i * <span class="number">2</span> + <span class="number">1</span>].l &lt;= r)</span><br><span class="line">        sum += <span class="built_in">search</span>(i * <span class="number">2</span> + <span class="number">1</span>, l, r);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> n, m;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    <span class="built_in">build</span>(<span class="number">1</span>, <span class="number">1</span>, n);</span><br><span class="line">    <span class="type">int</span> op, l, r;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; i++) &#123;</span><br><span class="line">        cin &gt;&gt; op &gt;&gt; l &gt;&gt; r;</span><br><span class="line">        <span class="keyword">if</span> (op == <span class="number">0</span>)<span class="built_in">change</span>(<span class="number">1</span>, l, r);</span><br><span class="line">        <span class="keyword">else</span> cout &lt;&lt; <span class="built_in">search</span>(<span class="number">1</span>, l, r) &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="C++">#include &lt;bits/stdc++.h&gt;
 
+#define N 100010
+using namespace std;
+typedef long long ll;
+
+struct node &#123;
+    int l, r;
+    int black, white, lz;
+&#125; tree[4 * N];  //四倍空间以上
+
+// 建树
+// 一开始只有黑棋
+void build(int i, int l, int r) &#123;
+    tree[i].l = l;
+    tree[i].r = r;
+    if (l == r) &#123;
+        tree[i].black++;
+        return;
+    &#125;
+
+    int mid = (l + r) / 2;
+    build(i * 2, l, mid);
+    build(i * 2 + 1, mid + 1, r);
+
+    tree[i].black = tree[i * 2].black + tree[i * 2 + 1].black;
+&#125;
+
+//向下传递
+inline void pushdown(int i) &#123;
+    if (tree[i].lz != 0) &#123;
+        swap(tree[i * 2].black, tree[i * 2].white);
+        swap(tree[i * 2 + 1].black, tree[i * 2 + 1].white);
+
+        tree[i * 2].lz ^= 1;
+        tree[i * 2 + 1].lz ^= 1;
+
+        tree[i].lz = 0;
+    &#125;
+&#125;
+
+//改变
+inline void change(int i, int l, int r) &#123;
+    if (tree[i].l &gt;= l &amp;&amp; tree[i].r &lt;= r) &#123;
+        tree[i].lz ^= 1;
+        swap(tree[i].black, tree[i].white);
+        return;
+    &#125;
+
+    pushdown(i);
+
+    if (tree[i * 2].r &gt;= l)
+        change(i * 2, l, r);
+    if (tree[i * 2 + 1].l &lt;= r)
+        change(i * 2 + 1, l, r);
+
+    tree[i].black = tree[i * 2].black + tree[i * 2 + 1].black;
+    tree[i].white = tree[i * 2].white + tree[i * 2 + 1].white;
+&#125;
+
+//询问
+int search(int i, int l, int r) &#123;
+    if (tree[i].l &gt;= l &amp;&amp; tree[i].r &lt;= r)
+        return tree[i].white;
+
+    pushdown(i);
+
+    int sum = 0;
+    if (tree[i * 2].r &gt;= l)
+        sum += search(i * 2, l, r);
+    if (tree[i * 2 + 1].l &lt;= r)
+        sum += search(i * 2 + 1, l, r);
+
+    return sum;
+&#125;
+
+int main() &#123;
+    int n, m;
+    cin &gt;&gt; n &gt;&gt; m;
+    build(1, 1, n);
+    int op, l, r;
+    for (int i = 1; i &lt;= m; i++) &#123;
+        cin &gt;&gt; op &gt;&gt; l &gt;&gt; r;
+        if (op == 0)change(1, l, r);
+        else cout &lt;&lt; search(1, l, r) &lt;&lt; endl;
+    &#125;
+&#125;
+</code></pre>
 <h2 id="B-糖果店"><a href="#B-糖果店" class="headerlink" title="B.糖果店"></a>B.糖果店</h2><h3 id="题面-1"><a href="#题面-1" class="headerlink" title="题面"></a>题面</h3><p>Description</p>
 <p>KK非常喜欢吃巧克力的，今天是开学前一天，他非常开心，他决定去糖果店买巧克力。他跟老板关系特别好，老板提出要跟他玩游戏，若KK取胜，他就可以免单今天买的巧克力；若老板赢了，KK就要给双倍的巧克力费用。</p>
 <p>现在他们面前有一个$n\times m$个巧克力块组成的大巧克力，他们可以把这个大巧克力掰成两块巧克力，并吃掉其中一块，若最后对方没有办法继续往下掰，则对方输掉游戏。</p>
@@ -454,8 +540,17 @@
 <p>这题的数据弱了（造数据的时候想少了一点），正确想法应该是判断巧克力是否正方形。</p>
 <p>若巧克力一开始是长方形的，则老板可以把它掰成正方形的，而KK无论怎么操作都只能掰成长方形的，故老板可以一直掰回正方形的，直到最后变成一个$1\times1$的巧克力，此时KK就输掉了比赛。</p>
 <p>相反，若一开始巧克力是正方形的，则在老板每次操作后，KK都可以把巧克力掰回正方形的，直到最后变成一个$1\times1$的巧克力，则最后KK取胜。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> n, m;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    <span class="keyword">if</span> (n == m)cout &lt;&lt; <span class="string">&quot;KK&quot;</span>;</span><br><span class="line">    <span class="keyword">else</span> cout &lt;&lt; <span class="string">&quot;BOSS&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="C++">#include &lt;bits/stdc++.h&gt;
 
+using namespace std;
+
+int main() &#123;
+    int n, m;
+    cin &gt;&gt; n &gt;&gt; m;
+    if (n == m)cout &lt;&lt; &quot;KK&quot;;
+    else cout &lt;&lt; &quot;BOSS&quot;;
+&#125;
+</code></pre>
 <h2 id="C-再分巧克力"><a href="#C-再分巧克力" class="headerlink" title="C.再分巧克力"></a>C.再分巧克力</h2><h3 id="题面-2"><a href="#题面-2" class="headerlink" title="题面"></a>题面</h3><p>Description</p>
 <p>KK屡战屡胜，免费得到好多巧克力，而且在和老板分巧克力时吃了太多巧克力了，现在吃不下了，于是叫来了$n$个好朋友，一起分巧克力。</p>
 <p>现在每个好朋友手里都分到了$a_i$块巧克力，这时KK发现分巧克力给有些朋友多，有些朋友少，觉得不公平，于是KK觉得应该让每个好朋友得到一样多的巧克力（即让每个好朋友拥有的巧克力一样多），这时KK不知道怎么分巧克力了，于是求助了机智的你，并要求每一次只能从一个好朋友手里拿走两块巧克力到另一个好朋友手上。</p>
@@ -476,8 +571,33 @@
 <p>移动次数为：</p>
 <p>$d&#x3D;avg-a[i]$</p>
 <p>$ans+&#x3D;d&#x2F;2$</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> a[<span class="number">105</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> n, ave = <span class="number">0</span>, ans = <span class="number">0</span>;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        cin &gt;&gt; a[i];</span><br><span class="line">        ave += a[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">bool</span> flag = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (ave % n != <span class="number">0</span>)flag = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        ave /= n;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            <span class="type">int</span> d = ave - a[i];</span><br><span class="line">            <span class="keyword">if</span> (d % <span class="number">2</span> != <span class="number">0</span>)flag = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (d &gt; <span class="number">0</span>)ans += d / <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (flag)cout &lt;&lt; ans &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">else</span> cout &lt;&lt; <span class="string">&quot;-1&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="C++">#include &lt;iostream&gt;
 
+using namespace std;
+int a[105];
+
+int main() &#123;
+    int n, ave = 0, ans = 0;
+    cin &gt;&gt; n;
+    for (int i = 1; i &lt;= n; i++) &#123;
+        cin &gt;&gt; a[i];
+        ave += a[i];
+    &#125;
+    bool flag = 1;
+    if (ave % n != 0)flag = 0;
+    else &#123;
+        ave /= n;
+        for (int i = 1; i &lt;= n; i++) &#123;
+            int d = ave - a[i];
+            if (d % 2 != 0)flag = 0;
+            else if (d &gt; 0)ans += d / 2;
+        &#125;
+    &#125;
+    if (flag)cout &lt;&lt; ans &lt;&lt; endl;
+    else cout &lt;&lt; &quot;-1&quot; &lt;&lt; endl;
+    return 0;
+&#125;
+</code></pre>
 <h2 id="D-老板称重"><a href="#D-老板称重" class="headerlink" title="D.老板称重"></a>D.老板称重</h2><h3 id="题面-3"><a href="#题面-3" class="headerlink" title="题面"></a>题面</h3><p>Description</p>
 <p>老板与KK玩完分巧克力游戏后，心里掂量掂量，想计算到底少了多少巧克力，亏本了多少。于是老板拿出了他的传家宝天平，发现这一架天平用了太久了，游码没了，但是祖祖辈辈传下来了无穷无尽的砝码，奇怪的是，这些砝码的重量都是任意的素数。</p>
 <p>现在老板想要用天平和砝码称出剩下$q$块巧克力的重量，用$w_i$表示第$i$块巧克力的重量。这时老板又不会了，看到你帮助KK分巧克力那么厉害，于是又求助了机智的你，想让你求出对于每块巧克力，最少需要使用多少个砝码才能称出其重量呢？</p>
@@ -498,22 +618,204 @@
 <p><strong>法一：BFS</strong><br>现场没有人用这种方法。<del>可能是BFS冷门。</del></p>
 <hr>
 <p>先素数打表预处理，然后初始从$0$开始BFS，每次枚举加或减的素数，（减一个素数$p$也可以看作加一个$-p$）将结果全部记录下来，每次询问$O(1)$输出即可<br>时间复杂度$O(n\pi(n))$其中$\pi(n)$是不大于n的素数个数。$\pi(n)\approx{n&#x2F;lnn}$</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//BFS</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> maxn = <span class="number">1e4</span> + <span class="number">5</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> INF = <span class="number">0x3f3f3f3f</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> w, q;</span><br><span class="line"><span class="type">int</span> ans[maxn];</span><br><span class="line"><span class="type">bool</span> a[maxn];</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; prime;</span><br><span class="line">queue&lt;<span class="type">int</span>&gt; Q;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Euler_Sieve</span><span class="params">(<span class="type">int</span> n, <span class="type">bool</span> a[])</span> </span>&#123;<span class="comment">//素数线性筛法</span></span><br><span class="line">    <span class="built_in">memset</span>(a, <span class="number">0</span>, <span class="built_in">sizeof</span>(a));</span><br><span class="line">    a[<span class="number">0</span>] = a[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a[i] == <span class="number">0</span>) &#123;</span><br><span class="line">            prime.<span class="built_in">push_back</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; prime.<span class="built_in">size</span>() &amp;&amp; prime[j] * i &lt;= n; j++) &#123;</span><br><span class="line">            a[prime[j] * i] = <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (i % prime[j] == <span class="number">0</span>)<span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">memset</span>(ans, INF, <span class="keyword">sizeof</span> ans);</span><br><span class="line">    <span class="built_in">Euler_Sieve</span>(<span class="number">10000</span>, a);</span><br><span class="line">    <span class="type">int</span> s = prime.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; s; i++) &#123;</span><br><span class="line">        prime.<span class="built_in">push_back</span>(-prime[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ans[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">    Q.<span class="built_in">push</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">while</span> (!Q.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="type">int</span> temp = Q.<span class="built_in">front</span>();</span><br><span class="line">        Q.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; prime.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">            <span class="type">int</span> n = temp + prime[i];</span><br><span class="line">            <span class="keyword">if</span> (n &gt;= <span class="number">0</span> &amp;&amp; n &lt;= <span class="number">10000</span> &amp;&amp; ans[n] == INF) &#123;</span><br><span class="line">                ans[n] = ans[temp] + <span class="number">1</span>;</span><br><span class="line">                Q.<span class="built_in">push</span>(n);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cin &gt;&gt; q;</span><br><span class="line">    <span class="keyword">while</span> (q--) &#123;</span><br><span class="line">        cin &gt;&gt; w;</span><br><span class="line">        cout &lt;&lt; ans[w] &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="C++">//BFS
+#include&lt;iostream&gt;
+#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+#include &lt;cstring&gt;
+#include &lt;queue&gt;
 
+using namespace std;
+const int maxn = 1e4 + 5;
+const int INF = 0x3f3f3f3f;
+
+int w, q;
+int ans[maxn];
+bool a[maxn];
+vector&lt;int&gt; prime;
+queue&lt;int&gt; Q;
+
+void Euler_Sieve(int n, bool a[]) &#123;//素数线性筛法
+    memset(a, 0, sizeof(a));
+    a[0] = a[1] = 1;
+    for (int i = 2; i &lt;= n; i++) &#123;
+        if (a[i] == 0) &#123;
+            prime.push_back(i);
+        &#125;
+        for (int j = 0; j &lt; prime.size() &amp;&amp; prime[j] * i &lt;= n; j++) &#123;
+            a[prime[j] * i] = 1;
+            if (i % prime[j] == 0)break;
+        &#125;
+    &#125;
+&#125;
+
+int main() &#123;
+    memset(ans, INF, sizeof ans);
+    Euler_Sieve(10000, a);
+    int s = prime.size();
+    for (int i = 0; i &lt; s; i++) &#123;
+        prime.push_back(-prime[i]);
+    &#125;
+
+    ans[0] = 0;
+    Q.push(0);
+    while (!Q.empty()) &#123;
+        int temp = Q.front();
+        Q.pop();
+        for (int i = 0; i &lt; prime.size(); i++) &#123;
+            int n = temp + prime[i];
+            if (n &gt;= 0 &amp;&amp; n &lt;= 10000 &amp;&amp; ans[n] == INF) &#123;
+                ans[n] = ans[temp] + 1;
+                Q.push(n);
+            &#125;
+        &#125;
+    &#125;
+
+    cin &gt;&gt; q;
+    while (q--) &#123;
+        cin &gt;&gt; w;
+        cout &lt;&lt; ans[w] &lt;&lt; endl;
+    &#125;
+    return 0;
+&#125;
+</code></pre>
 <p><strong>法二：完全背包</strong><br>比较明显的做法，但现场只有4人用DP。</p>
 <hr>
 <p>每个素数$p$可以看作是重量为$p$，价值为$1$的物品。减一个素数$p$也可以看作加一个$-p$，因此可以把$-p$看作重量为$-p$，价值为$1$的物品。这些物品有无限个。若素数有$N$个，则问题转化为有$2N$种物品，求使总重量等于$w_i$所获得的总价值最小值。</p>
 <p>先素数打表预处理，再进行一次完全背包，结果全部记录，每次询问$O(1)$输出即可。</p>
 <p>（也可以进行两次完全背包，先加素数进行一次，再减素数进行一次）。<br>时间复杂度$O(n\pi(n))$其中$\pi(n)$是不大于n的素数个数。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//DP</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> maxn = <span class="number">1e4</span> + <span class="number">5</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> INF = <span class="number">0x3f3f3f3f</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> N, w, q;</span><br><span class="line"><span class="type">int</span> dp[maxn];</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; prime;</span><br><span class="line"><span class="type">bool</span> a[maxn];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Euler_Sieve</span><span class="params">(<span class="type">int</span> n, <span class="type">bool</span> a[])</span> </span>&#123;<span class="comment">//素数线性筛法</span></span><br><span class="line">    <span class="built_in">memset</span>(a, <span class="number">0</span>, <span class="built_in">sizeof</span>(a));</span><br><span class="line">    a[<span class="number">0</span>] = a[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a[i] == <span class="number">0</span>) &#123;</span><br><span class="line">            prime.<span class="built_in">push_back</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; prime.<span class="built_in">size</span>() &amp;&amp; prime[j] * i &lt;= n; j++) &#123;</span><br><span class="line">            a[prime[j] * i] = <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (i % prime[j] == <span class="number">0</span>)<span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">memset</span>(dp, INF, <span class="keyword">sizeof</span> dp);</span><br><span class="line">    <span class="built_in">Euler_Sieve</span>(<span class="number">10000</span>, a);</span><br><span class="line">    <span class="type">int</span> s = prime.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; s; i++) &#123;</span><br><span class="line">        prime.<span class="built_in">push_back</span>(-prime[i]);</span><br><span class="line">        dp[prime[i]] = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    N = prime.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt;= <span class="number">10000</span>; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (j - prime[i] &gt; <span class="number">0</span> &amp;&amp; j - prime[i] &lt;= <span class="number">10000</span>)</span><br><span class="line">                dp[j] = <span class="built_in">min</span>(dp[j], dp[j - prime[i]] + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cin &gt;&gt; q;</span><br><span class="line">    <span class="keyword">while</span> (q--) &#123;</span><br><span class="line">        cin &gt;&gt; w;</span><br><span class="line">        cout &lt;&lt; dp[w] &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="C++">//DP
+#include&lt;iostream&gt;
+#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+#include &lt;cstring&gt;
 
+using namespace std;
+const int maxn = 1e4 + 5;
+const int INF = 0x3f3f3f3f;
+
+int N, w, q;
+int dp[maxn];
+vector&lt;int&gt; prime;
+bool a[maxn];
+
+void Euler_Sieve(int n, bool a[]) &#123;//素数线性筛法
+    memset(a, 0, sizeof(a));
+    a[0] = a[1] = 1;
+    for (int i = 2; i &lt;= n; i++) &#123;
+        if (a[i] == 0) &#123;
+            prime.push_back(i);
+        &#125;
+        for (int j = 0; j &lt; prime.size() &amp;&amp; prime[j] * i &lt;= n; j++) &#123;
+            a[prime[j] * i] = 1;
+            if (i % prime[j] == 0)break;
+        &#125;
+    &#125;
+&#125;
+
+int main() &#123;
+    memset(dp, INF, sizeof dp);
+    Euler_Sieve(10000, a);
+    int s = prime.size();
+    for (int i = 0; i &lt; s; i++) &#123;
+        prime.push_back(-prime[i]);
+        dp[prime[i]] = 1;
+    &#125;
+
+    N = prime.size();
+    for (int i = 0; i &lt; N; i++) &#123;
+        for (int j = 0; j &lt;= 10000; j++) &#123;
+            if (j - prime[i] &gt; 0 &amp;&amp; j - prime[i] &lt;= 10000)
+                dp[j] = min(dp[j], dp[j - prime[i]] + 1);
+        &#125;
+    &#125;
+
+    cin &gt;&gt; q;
+    while (q--) &#123;
+        cin &gt;&gt; w;
+        cout &lt;&lt; dp[w] &lt;&lt; endl;
+    &#125;
+    return 0;
+&#125;
+</code></pre>
 <p><strong>法三：数论</strong><br>由著名的哥德巴赫猜想可知，任一大于$2$的整数都可写成三个质数之和，任一大于$2$的偶数都可写成两个质数之和。因此答案只能是$1$，$2$或$3$。<br>在比赛前，我的做法是通过枚举找到答案是$1$或$2$的数，剩下的数的答案都是$3$。<br>时间复杂度$O(\pi(n)\pi(n))$其中$\pi(n)$是不大于n的素数个数。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//数论</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> maxn = <span class="number">1e4</span> + <span class="number">5</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> INF = <span class="number">0x3f3f3f3f</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> w, q;</span><br><span class="line">map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; ans;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; prime;</span><br><span class="line"><span class="type">bool</span> a[maxn];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Euler_Sieve</span><span class="params">(<span class="type">int</span> n, <span class="type">bool</span> a[])</span> </span>&#123;<span class="comment">//素数线性筛法</span></span><br><span class="line">    <span class="built_in">memset</span>(a, <span class="number">0</span>, <span class="built_in">sizeof</span>(a));</span><br><span class="line">    a[<span class="number">0</span>] = a[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a[i] == <span class="number">0</span>) &#123;</span><br><span class="line">            prime.<span class="built_in">push_back</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; prime.<span class="built_in">size</span>() &amp;&amp; prime[j] * i &lt;= n; j++) &#123;</span><br><span class="line">            a[prime[j] * i] = <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (i % prime[j] == <span class="number">0</span>)<span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">Euler_Sieve</span>(<span class="number">10000</span>, a);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; prime.<span class="built_in">size</span>(); i++)ans[prime[i]] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; prime.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; prime.<span class="built_in">size</span>(); j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> ((prime[i] + prime[j]) &gt;= <span class="number">0</span> &amp;&amp; (prime[i] + prime[j]) &lt;= <span class="number">10000</span> &amp;&amp; ans[prime[i] + prime[j]] == <span class="number">0</span>)</span><br><span class="line">                ans[prime[i] + prime[j]] = <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span> ((prime[i] - prime[j]) &gt;= <span class="number">0</span> &amp;&amp; (prime[i] - prime[j]) &lt;= <span class="number">10000</span> &amp;&amp; ans[prime[i] - prime[j]] == <span class="number">0</span>)</span><br><span class="line">                ans[prime[i] - prime[j]] = <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cin &gt;&gt; q;</span><br><span class="line">    <span class="keyword">while</span> (q--) &#123;</span><br><span class="line">        cin &gt;&gt; w;</span><br><span class="line">        <span class="keyword">if</span> (ans[w] == <span class="number">1</span> || ans[w] == <span class="number">2</span>)cout &lt;&lt; ans[w] &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">else</span> cout &lt;&lt; <span class="number">3</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="C++">//数论
+#include&lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;cstring&gt;
+#include &lt;map&gt;
 
+using namespace std;
+const int maxn = 1e4 + 5;
+const int INF = 0x3f3f3f3f;
+
+int w, q;
+map&lt;int, int&gt; ans;
+vector&lt;int&gt; prime;
+bool a[maxn];
+
+void Euler_Sieve(int n, bool a[]) &#123;//素数线性筛法
+    memset(a, 0, sizeof(a));
+    a[0] = a[1] = 1;
+    for (int i = 2; i &lt;= n; i++) &#123;
+        if (a[i] == 0) &#123;
+            prime.push_back(i);
+        &#125;
+        for (int j = 0; j &lt; prime.size() &amp;&amp; prime[j] * i &lt;= n; j++) &#123;
+            a[prime[j] * i] = 1;
+            if (i % prime[j] == 0)break;
+        &#125;
+    &#125;
+&#125;
+
+int main() &#123;
+    Euler_Sieve(10000, a);
+    for (int i = 0; i &lt; prime.size(); i++)ans[prime[i]] = 1;
+    for (int i = 0; i &lt; prime.size(); i++) &#123;
+        for (int j = 0; j &lt; prime.size(); j++) &#123;
+            if ((prime[i] + prime[j]) &gt;= 0 &amp;&amp; (prime[i] + prime[j]) &lt;= 10000 &amp;&amp; ans[prime[i] + prime[j]] == 0)
+                ans[prime[i] + prime[j]] = 2;
+            if ((prime[i] - prime[j]) &gt;= 0 &amp;&amp; (prime[i] - prime[j]) &lt;= 10000 &amp;&amp; ans[prime[i] - prime[j]] == 0)
+                ans[prime[i] - prime[j]] = 2;
+        &#125;
+    &#125;
+
+    cin &gt;&gt; q;
+    while (q--) &#123;
+        cin &gt;&gt; w;
+        if (ans[w] == 1 || ans[w] == 2)cout &lt;&lt; ans[w] &lt;&lt; endl;
+        else cout &lt;&lt; 3 &lt;&lt; endl;
+    &#125;
+    return 0;
+&#125;
+</code></pre>
 <p>但是现场基本上都是这样做的。（可能是受到我的hint的影响？）<br>这个数是质数的时候，答案是$1$；否则是偶数的时候，答案是$2$；否则是奇数且它-2后的奇数是质数的时候，答案是$2$；其余的答案是$3$。<br>时间复杂度$O(n\sqrt{n})$</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> maxn = <span class="number">1e4</span> + <span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> w, q;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isPrime</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (x &lt;= <span class="number">1</span>)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i * i &lt;= x; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (x % i == <span class="number">0</span>)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cin &gt;&gt; q;</span><br><span class="line">    <span class="keyword">while</span> (q--) &#123;</span><br><span class="line">        cin &gt;&gt; w;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">isPrime</span>(w))cout &lt;&lt; <span class="number">1</span> &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (w % <span class="number">2</span> == <span class="number">0</span> || <span class="built_in">isPrime</span>(w - <span class="number">2</span>) || <span class="built_in">isPrime</span>(w + <span class="number">2</span>))</span><br><span class="line">            cout &lt;&lt; <span class="number">2</span> &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">else</span> cout &lt;&lt; <span class="number">3</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="C++">#include&lt;iostream&gt;
 
+using namespace std;
+const int maxn = 1e4 + 5;
+int w, q;
 
+bool isPrime(int x) &#123;
+    if (x &lt;= 1)return false;
+    for (int i = 2; i * i &lt;= x; i++) &#123;
+        if (x % i == 0)return false;
+    &#125;
+    return true;
+&#125;
+
+int main() &#123;
+    cin &gt;&gt; q;
+    while (q--) &#123;
+        cin &gt;&gt; w;
+        if (isPrime(w))cout &lt;&lt; 1 &lt;&lt; endl;
+        else if (w % 2 == 0 || isPrime(w - 2) || isPrime(w + 2))
+            cout &lt;&lt; 2 &lt;&lt; endl;
+        else cout &lt;&lt; 3 &lt;&lt; endl;
+    &#125;
+    return 0;
+&#125;
+</code></pre>
 <h2 id="E-老板装糖果"><a href="#E-老板装糖果" class="headerlink" title="E.老板装糖果"></a>E.老板装糖果</h2><h3 id="题面-4"><a href="#题面-4" class="headerlink" title="题面"></a>题面</h3><p>Description</p>
 <p>在老板搬店铺的时候，他发现他有大量散装糖果。店里有一些固定容量的糖罐可以装这些糖果。他想装尽量多的糖果以便不亏损，实在装不下就丢弃剩下的糖果。每个糖罐可以装的糖果数量有限制，而且糖罐能够装的总重量不能超过每个糖罐的限制。当然一个糖罐也可以不装任何东西。任何两个糖果都有一个特征，它们中总有一个的重量是另外一个的整数倍，当然它们也可能相等。</p>
 <p>Input</p>
@@ -535,14 +837,96 @@
 <p>当我们正在放大小为$3$的糖果时，就使用最低位上的容量。比如我们只有$1$个大小为$3$的糖果，那么塞入以后剩余容量为$(1,1,3,2)$。</p>
 <p>接下来要放大小为$9$的糖果，最低位上的那个$1$就永远用不上了。假如我们有$2$个$9$，而第二位上只有 $1$的容量，那么就往高位借一个$18$拆成两个$9$，变成$(1,3,2,2)$，然后塞入后剩余$(1,1,2,2)$。以此类推。</p>
 <p>时间复杂度$O(nlogm)$</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> maxn = <span class="number">1e5</span> + <span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n, m, a[maxn], b[maxn], num[maxn], c[<span class="number">35</span>], tot, cnt[<span class="number">35</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> id)</span> </span>&#123;<span class="comment">//首先核对是否够减，不够要依次借位</span></span><br><span class="line">    <span class="keyword">if</span> (id &gt; tot)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (cnt[id]) &#123;</span><br><span class="line">        cnt[id]--;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">dfs</span>(id + <span class="number">1</span>)) &#123;</span><br><span class="line">        cnt[id] += c[id + <span class="number">1</span>] / c[id];</span><br><span class="line">        cnt[id]--;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) cin &gt;&gt; a[i];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; i++) cin &gt;&gt; b[i];</span><br><span class="line">    <span class="built_in">sort</span>(b + <span class="number">1</span>, b + m + <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (b[i] != b[i - <span class="number">1</span>]) c[++tot] = b[i];</span><br><span class="line">        num[i] = tot;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = tot; j; j--) &#123;</span><br><span class="line">            cnt[j] += a[i] / c[j];</span><br><span class="line">            a[i] %= c[j];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">dfs</span>(num[i])) &#123;</span><br><span class="line">            cout &lt;&lt; i - <span class="number">1</span> &lt;&lt; endl;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (i == m)cout &lt;&lt; m &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="C++">#include&lt;iostream&gt;
+#include &lt;algorithm&gt;
 
+using namespace std;
+
+const int maxn = 1e5 + 5;
+int n, m, a[maxn], b[maxn], num[maxn], c[35], tot, cnt[35];
+
+bool dfs(int id) &#123;//首先核对是否够减，不够要依次借位
+    if (id &gt; tot)return false;
+    if (cnt[id]) &#123;
+        cnt[id]--;
+        return true;
+    &#125;
+    if (dfs(id + 1)) &#123;
+        cnt[id] += c[id + 1] / c[id];
+        cnt[id]--;
+        return true;
+    &#125;
+    return false;
+&#125;
+
+int main() &#123;
+    cin &gt;&gt; n &gt;&gt; m;
+    for (int i = 1; i &lt;= n; i++) cin &gt;&gt; a[i];
+    for (int i = 1; i &lt;= m; i++) cin &gt;&gt; b[i];
+    sort(b + 1, b + m + 1);
+    for (int i = 1; i &lt;= m; i++) &#123;
+        if (b[i] != b[i - 1]) c[++tot] = b[i];
+        num[i] = tot;
+    &#125;
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = tot; j; j--) &#123;
+            cnt[j] += a[i] / c[j];
+            a[i] %= c[j];
+        &#125;
+
+    for (int i = 1; i &lt;= m; i++) &#123;
+        if (!dfs(num[i])) &#123;
+            cout &lt;&lt; i - 1 &lt;&lt; endl;
+            return 0;
+        &#125;
+        if (i == m)cout &lt;&lt; m &lt;&lt; endl;
+    &#125;
+    return 0;
+&#125;
+</code></pre>
 <p><strong>法二：贪心+二分</strong></p>
 <p>根据贪心的思想，糖果从小到大放最优，二分答案$mid$，转化为判断前$mid$小的糖果能否放完。</p>
 <p>如何判断前$mid$小的$mid$个糖果能否放完？因为糖果两两互为倍数关系，所以每个糖果都是某个数$x$的倍数，所以每个糖罐的容量都是$x$的倍数加上一个小于$x$的数。如果前$mid$个糖果都能放下，则最大的糖果必须能放下，于是可以，从大到小考虑糖果，依次扫描每个糖罐，能放就放，且与糖罐顺序无关。如果有不能放下的情况，则前$mid$小的$mid$个糖果不能放完。</p>
 <p>由于糖果重量都成倍数关系，所以最多只有$O(logm)$种不同的数字。时间复杂度为$O(nlogmlogm)$。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> maxn = <span class="number">1e5</span> + <span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n, m, a[maxn], b[maxn], c[maxn];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">check</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> i, j, k, t;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; i++)c[i] = a[i];</span><br><span class="line">    <span class="keyword">for</span> (; x; x = j) &#123;</span><br><span class="line">        <span class="keyword">for</span> (j = x - <span class="number">1</span>; b[x] == b[j]; j--);</span><br><span class="line">        <span class="keyword">for</span> (t = x - j, i = <span class="number">1</span>; i &lt;= n &amp;&amp; t; i++) &#123;</span><br><span class="line">            k = c[i] / b[x];</span><br><span class="line">            <span class="keyword">if</span> (k &gt; t) k = t;</span><br><span class="line">            c[i] -= k * b[x], t -= k;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (t)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)cin &gt;&gt; a[i];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; i++)cin &gt;&gt; b[i];</span><br><span class="line">    <span class="built_in">sort</span>(b + <span class="number">1</span>, b + m + <span class="number">1</span>);</span><br><span class="line">    <span class="type">int</span> l = <span class="number">0</span>, r = m;</span><br><span class="line">    <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">        <span class="type">int</span> mid = (l + r + <span class="number">1</span>) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">check</span>(mid))l = mid;</span><br><span class="line">        <span class="keyword">else</span> r = mid - <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; l;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="C++">#include&lt;iostream&gt;
+#include&lt;cstdio&gt;
+#include&lt;algorithm&gt;
 
+using namespace std;
+
+const int maxn = 1e5 + 5;
+int n, m, a[maxn], b[maxn], c[maxn];
+
+bool check(int x) &#123;
+    int i, j, k, t;
+    for (i = 1; i &lt;= n; i++)c[i] = a[i];
+    for (; x; x = j) &#123;
+        for (j = x - 1; b[x] == b[j]; j--);
+        for (t = x - j, i = 1; i &lt;= n &amp;&amp; t; i++) &#123;
+            k = c[i] / b[x];
+            if (k &gt; t) k = t;
+            c[i] -= k * b[x], t -= k;
+        &#125;
+        if (t)return false;
+    &#125;
+    return true;
+&#125;
+
+int main() &#123;
+    cin &gt;&gt; n &gt;&gt; m;
+    for (int i = 1; i &lt;= n; i++)cin &gt;&gt; a[i];
+    for (int i = 1; i &lt;= m; i++)cin &gt;&gt; b[i];
+    sort(b + 1, b + m + 1);
+    int l = 0, r = m;
+    while (l &lt; r) &#123;
+        int mid = (l + r + 1) &gt;&gt; 1;
+        if (check(mid))l = mid;
+        else r = mid - 1;
+    &#125;
+    cout &lt;&lt; l;
+    return 0;
+&#125;
+</code></pre>
 <h2 id="F-加水"><a href="#F-加水" class="headerlink" title="F.加水"></a>F.加水</h2><h3 id="题面-5"><a href="#题面-5" class="headerlink" title="题面"></a>题面</h3><p>Description</p>
 <p>KK面前有$n$个连续排放在一排的桶，编号分别为$1,2,……n$。这$n$个桶里面装着一定重量的水。KK附近有个水龙头，KK想将桶里的水变成不一样重量的水量，看看有多少种不同的组合。但是KK最多可以选择不同的桶组合加水$k$次。</p>
 <p>每一次加水KK需要先选定这一排桶中的一个或多个连续的桶，即如果KK有$3$个桶分别为$1，2，3$号桶，KK要么只拿$1$号桶，要么只拿$2$号桶，要么只拿$3$号桶，要么只拿$1$号$2$号两个桶，要么只拿$2$号$3$号两个桶，要么一次拿$1，2，3$号三个桶一起拿，但是不能一次操作中同时只拿$1$号和$3$号桶。</p>
@@ -564,7 +948,51 @@
 <p>那么就想到了dp，先暴力找出每个数 $a[i]$可以延申到的区间左端点，右端点，记下来$[l,r]$，$dp[k][i]$表示第 $k$ 段子串，当前计算到原序列第$i$个数的段。</p>
 <p>那么 dp 方程出来了一条：$dp[i][j]+&#x3D;\sum dp[k][j-1],l&lt;k&lt;r$</p>
 <p>如果$[l,r],l&#x3D;&#x3D;r$，即有：$dp[i][j]+&#x3D;dp[i-1][j-1]$</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> N 505</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> mod 1000000007</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> n, m, a[N], dp[N][N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;n, &amp;m);</span><br><span class="line">    <span class="type">int</span> i, j, k, l, r, now;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; i++)<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;a[i]);</span><br><span class="line">    </span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        l = i;</span><br><span class="line">        <span class="keyword">while</span> (l &gt; <span class="number">1</span> &amp;&amp; a[l - <span class="number">1</span>] &lt; a[i])l--;</span><br><span class="line">        r = i;</span><br><span class="line">        <span class="keyword">while</span> (r &lt; n &amp;&amp; a[r + <span class="number">1</span>] &lt; a[i])r++;</span><br><span class="line"></span><br><span class="line">        dp[i][m] = (dp[i][m] + dp[i - <span class="number">1</span>][m]) % mod;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (j = m; j; j--) &#123;</span><br><span class="line">            <span class="keyword">for</span> (k = l, now = dp[l - <span class="number">1</span>][j - <span class="number">1</span>]; k &lt;= r; k++) &#123;</span><br><span class="line">                dp[k][j] = (dp[k][j] + now) % mod;</span><br><span class="line">                now = (now + dp[k][j - <span class="number">1</span>]) % mod;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            dp[i][j - <span class="number">1</span>] = (dp[i][j - <span class="number">1</span>] + dp[i - <span class="number">1</span>][j - <span class="number">1</span>]) % mod;</span><br><span class="line">            dp[i][j] = (dp[i][j] - dp[i - <span class="number">1</span>][j - <span class="number">1</span>] + mod) % mod;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt;= m; i++)ans = (ans + dp[n][i]) % mod;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="C++">#include&lt;iostream&gt;
+#include&lt;cstdio&gt;
+#include&lt;cstring&gt;
+
+#define N 505
+#define mod 1000000007
+using namespace std;
+
+int n, m, a[N], dp[N][N];
+
+int main() &#123;
+    scanf(&quot;%d%d&quot;, &amp;n, &amp;m);
+    int i, j, k, l, r, now;
+
+    for (i = 1; i &lt;= n; i++)scanf(&quot;%d&quot;, &amp;a[i]);
+    
+    dp[0][0] = 1;
+
+    for (i = 1; i &lt;= n; i++) &#123;
+        l = i;
+        while (l &gt; 1 &amp;&amp; a[l - 1] &lt; a[i])l--;
+        r = i;
+        while (r &lt; n &amp;&amp; a[r + 1] &lt; a[i])r++;
+
+        dp[i][m] = (dp[i][m] + dp[i - 1][m]) % mod;
+
+        for (j = m; j; j--) &#123;
+            for (k = l, now = dp[l - 1][j - 1]; k &lt;= r; k++) &#123;
+                dp[k][j] = (dp[k][j] + now) % mod;
+                now = (now + dp[k][j - 1]) % mod;
+            &#125;
+
+            dp[i][j - 1] = (dp[i][j - 1] + dp[i - 1][j - 1]) % mod;
+            dp[i][j] = (dp[i][j] - dp[i - 1][j - 1] + mod) % mod;
+        &#125;
+    &#125;
+
+    int ans = 0;
+    for (i = 0; i &lt;= m; i++)ans = (ans + dp[n][i]) % mod;
+
+    printf(&quot;%d\n&quot;, ans);
+    return 0;
+&#125;
+</code></pre>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 1300773281@qq.com </span>
     </div>

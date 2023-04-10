@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Hexo</title>
-  <meta name="keywords" content="">
-  <meta name="description" content="Hexo">
+  <title>安装Pytorch | Hexo</title>
+  <meta name="keywords" content=" 安装 ">
+  <meta name="description" content="安装Pytorch | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="质数试除法判定质数判定数n是否是质数。 如果d是n的因子，那么n&#x2F;d也是n的因子，$d\leq\frac{n}{d}$，所以$d\leq\sqrt{n}$，故从1枚举到$\sqrt{n}$。 $O(\sqrt{n})$ bool is_prime(int x) &amp;#123;     if (x &lt; 2)return false;     if (x &#x3D;&#x3D; 2)return true">
 <meta property="og:type" content="article">
@@ -61,7 +61,7 @@
 
 
 <body>
-<aside class="nav mobile">
+<aside class="nav">
     <div class="nav-left">
         <a href="/"
    class="avatar_target">
@@ -370,12 +370,69 @@
         </div>
     </div>
 </aside>
-<div id="post" class="index">
+<div id="post">
     <div class="pjax">
-        <article class="index">
-            <div class="toc-ref">
+        <article id="post-Install-Pytorch" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Welcome-to-my-blog"><span class="toc-text">Welcome to my blog!</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8ELyue"><span class="toc-text">关于Lyue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tips"><span class="toc-text">Tips</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%9A%E5%AE%A2%E5%B9%B3%E5%8F%B0"><span class="toc-text">博客平台</span></a></li></ol></li></ol>
+        <h1 class="article-title">安装Pytorch</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="踩坑">踩坑</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color3">安装</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+            Created At : <time class="date" title='Updated At: 2023-04-10 15:57:31'>2022-07-20 22:30</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            Views 👀 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+        <span class="top-comment" title="跳转至评论区">
+            <a href="#comments">
+                Comment:<span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </a>
+        </span>
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Anaconda"><span class="toc-text">Anaconda</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PyTorch"><span class="toc-text">PyTorch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PyCharm"><span class="toc-text">PyCharm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Jupyter"><span class="toc-text">Jupyter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PyTorch%E6%96%87%E6%A1%A3"><span class="toc-text">PyTorch文档</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -388,24 +445,81 @@
     }
 </style>
 </div>
-            <h1 id="Welcome-to-my-blog"><a href="#Welcome-to-my-blog" class="headerlink" title="Welcome to my blog!"></a>Welcome to my blog!</h1><p>搭了个博客玩一玩，用于记录</p>
-<h2 id="关于Lyue"><a href="#关于Lyue" class="headerlink" title="关于Lyue"></a>关于Lyue</h2><p>超萌新程序媛 </p>
-<p>爱任何好听的音乐</p>
-<p>喜欢一切美好的事 </p>
-<p>我的个人基地：</p>
-<p><a target="_blank" rel="noopener" href="https://lyueer.github.io/">博客</a>  </p>
-<p><a target="_blank" rel="noopener" href="https://music.163.com/#/user/home?id=3275353754">网易云@Lyue</a>  </p>
-<p><a target="_blank" rel="noopener" href="https://space.bilibili.com/629362232?spm_id_from=333.1007.0.0">Bilibili@风格Lyue</a>  </p>
-<p><a target="_blank" rel="noopener" href="https://github.com/Lyueer">Github@Lyueer</a></p>
-<p>到目前为止已经写了<code class="article_number"></code>篇文章， 共<code class="site_word_count"></code>字。</p>
-<p>本站访问人数：<code class="site_uv"></code>人次 ， 访问量：<code class="site_pv"></code>次</p>
-<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h2><p>文章较长可切换到大纲模式 快捷键w  </p>
-<p>切换全屏 快捷键s</p>
-<h2 id="博客平台"><a href="#博客平台" class="headerlink" title="博客平台"></a>博客平台</h2><p>这个博客通过 <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> 生成，部署在 <a target="_blank" rel="noopener" href="https://pages.github.com/">GitHub Pages</a>主题为 <a target="_blank" rel="noopener" href="https://github.com/yelog/hexo-theme-3-hexo">3-hexo</a> </p>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Anaconda"><a href="#Anaconda" class="headerlink" title="Anaconda"></a>Anaconda</h2><p>安装Anaconda<br>略<br>打开Anaconda命令行<br>Anaconda Prompt(Anaconda3)<br>输入命令</p>
+<pre><code>conda -n pytorchE0 python=3.9
+//pytorchE0是环境名称(随便起) //python=3.9是安装anaconda时安装的python版本
+</code></pre>
+<p>激活（进入）pytorchE0环境</p>
+<pre><code>conda activate pytorchE0
+//进入到pytorchE0环境
+</code></pre>
+<p>查看环境中的工具包</p>
+<pre><code>pip list
+//发现工具包没有pytorch
+</code></pre>
+<h2 id="PyTorch"><a href="#PyTorch" class="headerlink" title="PyTorch"></a>PyTorch</h2><p>安装pytorch</p>
+<p>我的电脑有独立显卡</p>
+<img src="/2022/07/20/Install-Pytorch/2.png" class="" title="two">  
+<p>查看CUDA版本，打开cmd，输入</p>
+<pre><code>nvida-smi
+</code></pre>
+<img src="/2022/07/20/Install-Pytorch/3.png" class="" title="three">
 
-        </article>
-        
-        
+
+
+<p>发现只能装CUDA 10.2及以下版本  </p>
+<p>进入<a target="_blank" rel="noopener" href="https://pytorch.org/">pytorch官网首页</a>  </p>
+<img src="/2022/07/20/Install-Pytorch/1.png" class="" title="one">
+
+<p>查看官网以前的安装版本  </p>
+<img src="/2022/07/20/Install-Pytorch/4.png" class="" title="以前版本">
+<p>复制命令到Anaconda命令行，安装</p>
+<p>输入命令</p>
+<pre><code>conda install pytorch==1.10.0 torchvision==0.11.0 torchaudio==0.10.0 cudatoolkit=10.2 -c pytorch
+</code></pre>
+<h2 id="PyCharm"><a href="#PyCharm" class="headerlink" title="PyCharm"></a>PyCharm</h2><p>安装PyCharm<br>略<br>在pycharm中添加pytorch环境的解释器</p>
+ <img src="/2022/07/20/Install-Pytorch/5.png" class="" title="解释器">
+
+<img src="/2022/07/20/Install-Pytorch/7.png" class="" title="图片">
+
+<img src="/2022/07/20/Install-Pytorch/8.png" class="" title="eight">
+
+<img src="/2022/07/20/Install-Pytorch/6.png" class="" title="图片">
+
+
+
+<h2 id="Jupyter"><a href="#Jupyter" class="headerlink" title="Jupyter"></a>Jupyter</h2><p>使用jupyter<br>方法一：在anaconda的base环境安装pytorch<br>略<br>方法二：在anaconda的自己创建的pytorchE0环境安装jupyter<br>进入Anaconda Prompt(Anaconda3)<br>输入命令</p>
+<pre><code>conda list
+//查看需要的包的名称为：ipykernel
+</code></pre>
+<p>进入环境</p>
+<pre><code>conda activate pytorchE0
+</code></pre>
+<pre><code>conda list
+//发现并没有ipykernel
+</code></pre>
+<p>python&#x3D;3.9的输入这个命令</p>
+<pre><code>conda install nb_conda_kernels
+</code></pre>
+<p>打开jupyter</p>
+<pre><code>jupyter notebook
+</code></pre>
+<pre><code>jupyter notebook D:
+</code></pre>
+<h2 id="PyTorch文档"><a href="#PyTorch文档" class="headerlink" title="PyTorch文档"></a>PyTorch文档</h2><p>pytorch中文手册<br><a target="_blank" rel="noopener" href="https://github.com/zergtant/pytorch-handbook">https://github.com/zergtant/pytorch-handbook</a><br>pytorch官网官方文档<br><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/index">https://pytorch.org/docs/stable/index</a></p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 1300773281@qq.com </span>
+    </div>
+</article>
+
+
+
+
+
     <div id="comments"></div>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
 
@@ -427,6 +541,13 @@
 </script>
 
 
+
+
+    
+
+
+
+
     </div>
     <div class="copyright">
         <p class="footer-entry">
@@ -435,11 +556,11 @@
 <p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
 
     </div>
-</div>
-<div class="full-toc">
-    <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
 <a class="" id="rocket" ></a>
 
+    </div>
 </div>
 
 </body>
